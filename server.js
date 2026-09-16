@@ -371,6 +371,8 @@ const initialTest2 = {
   score: 88,
   grade: 'B',
   from: 'notifications@github.com',
+  from_domain: 'github.com',
+  source: 'received',
   subject: 'Deployment notification #412',
   spf_status: 'pass',
   dkim_status: 'pass',
@@ -380,6 +382,69 @@ const { report: rep2, rawEmail: raw2 } = generateSampleReport(initialTestId2, 'g
 tests.set(initialTestId2, initialTest2);
 reports.set(initialTestId2, rep2);
 rawEmails.set(initialTestId2, raw2);
+
+const initialTestId3 = 'strp-892kld-mopq-491a';
+const initialTest3 = {
+  id: initialTestId3,
+  email: `${PREFIX}${initialTestId3}@${DOMAIN}`,
+  status: 'analyzed',
+  created_at: new Date(Date.now() - 10800000).toISOString(),
+  score: 98,
+  grade: 'A+',
+  from: 'billing@stripe.com',
+  from_domain: 'stripe.com',
+  source: 'received',
+  subject: 'Invoice #3892 payment receipt',
+  spf_status: 'pass',
+  dkim_status: 'pass',
+  dmarc_status: 'pass',
+};
+const { report: rep3, rawEmail: raw3 } = generateSampleReport(initialTestId3, 'stripe.com', 'billing@stripe.com');
+tests.set(initialTestId3, initialTest3);
+reports.set(initialTestId3, rep3);
+rawEmails.set(initialTestId3, raw3);
+
+const initialTestId4 = 'linr-172xwy-zqrv-829b';
+const initialTest4 = {
+  id: initialTestId4,
+  email: `${PREFIX}${initialTestId4}@${DOMAIN}`,
+  status: 'analyzed',
+  created_at: new Date(Date.now() - 14400000).toISOString(),
+  score: 92,
+  grade: 'A',
+  from: 'notifications@linear.app',
+  from_domain: 'linear.app',
+  source: 'uploaded',
+  subject: 'Sprint 42 completed: 18 issues resolved',
+  spf_status: 'pass',
+  dkim_status: 'pass',
+  dmarc_status: 'pass',
+};
+const { report: rep4, rawEmail: raw4 } = generateSampleReport(initialTestId4, 'linear.app', 'notifications@linear.app');
+tests.set(initialTestId4, initialTest4);
+reports.set(initialTestId4, rep4);
+rawEmails.set(initialTestId4, raw4);
+
+const initialTestId5 = 'prom-339kjd-wwtr-502c';
+const initialTest5 = {
+  id: initialTestId5,
+  email: `${PREFIX}${initialTestId5}@${DOMAIN}`,
+  status: 'analyzed',
+  created_at: new Date(Date.now() - 21600000).toISOString(),
+  score: 74,
+  grade: 'C',
+  from: 'promos@marketing.sendwave.io',
+  from_domain: 'marketing.sendwave.io',
+  source: 'received',
+  subject: 'Exclusive limited summer discount for subscribers',
+  spf_status: 'pass',
+  dkim_status: 'pass',
+  dmarc_status: 'neutral',
+};
+const { report: rep5, rawEmail: raw5 } = generateSampleReport(initialTestId5, 'marketing.sendwave.io', 'promos@marketing.sendwave.io');
+tests.set(initialTestId5, initialTest5);
+reports.set(initialTestId5, rep5);
+rawEmails.set(initialTestId5, raw5);
 
 // ================= API ROUTES =================
 
@@ -522,11 +587,14 @@ app.get('/api/tests', (req, res) => {
 
   const allTests = Array.from(tests.values())
     .map((t) => ({
-      id: t.id,
+      test_id: t.id || t.test_id,
+      id: t.id || t.test_id,
       score: t.score || 0,
       grade: t.grade || 'A',
       created_at: t.created_at || new Date().toISOString(),
       from: t.from || 'test@example.com',
+      from_domain: t.from_domain || (t.from && t.from.includes('@') ? t.from.split('@')[1] : 'example.com'),
+      source: t.source || 'received',
       subject: t.subject || 'Deliverability Test',
       spf_status: t.spf_status || 'pass',
       dkim_status: t.dkim_status || 'pass',
@@ -888,6 +956,8 @@ function serveApp(req, res) {
 
 // Routes matching SvelteKit SPA navigation
 app.get('/', serveApp);
+app.get('/dashboard', serveApp);
+app.get('/dashboard/*', serveApp);
 app.get('/blacklist', serveApp);
 app.get('/blacklist/*', serveApp);
 app.get('/bimi', serveApp);

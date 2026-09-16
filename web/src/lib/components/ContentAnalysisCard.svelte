@@ -73,7 +73,7 @@
                     <div class="mb-2">
                         <strong>Unsubscribe Methods:</strong>
                         <div class="mt-1">
-                            {#each contentAnalysis.unsubscribe_methods as method (method)}
+                            {#each contentAnalysis.unsubscribe_methods as method, i (method + "-" + i)}
                                 <span class="badge bg-info me-1">{method}</span>
                             {/each}
                         </div>

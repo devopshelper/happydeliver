@@ -89,7 +89,7 @@
             <div class="mb-2">
                 <strong>Tests Triggered:</strong>
                 <div class="mt-2">
-                    {#each spamassassin.tests as test (test)}
+                    {#each spamassassin.tests as test, i (test + "-" + i)}
                         <span
                             class="badge {$theme === 'light'
                                 ? 'bg-light text-dark'

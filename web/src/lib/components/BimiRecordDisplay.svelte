@@ -378,7 +378,7 @@
                     class="list-group list-group-flush mt-2"
                     class:d-none={!checksOpen}
                 >
-                    {#each bimiRecord.checks as check (check.name)}
+                    {#each bimiRecord.checks as check, i (check.name ? check.name + "-" + i : i)}
                         <li class="list-group-item px-0">
                             <i
                                 class="bi {STATUS[check.status].icon} {STATUS[check.status]
@@ -449,7 +449,7 @@
                     {#if bimiRecord.vmc.san_domains && bimiRecord.vmc.san_domains.length > 0}
                         <div class="mb-1">
                             <strong>Covered domains:</strong>
-                            {#each bimiRecord.vmc.san_domains as san (san)}
+                            {#each bimiRecord.vmc.san_domains as san, i (san + "-" + i)}
                                 <code class="me-1">{san}</code>
                             {/each}
                         </div>

@@ -42,7 +42,7 @@
                     </h5>
                     <table class="table table-sm table-striped table-hover mb-0">
                         <tbody>
-                            {#each checks as check (check.rbl)}
+                            {#each checks as check, i (check.rbl + "-" + i)}
                                 <tr>
                                     <td title={check.response || "-"}>
                                         <span

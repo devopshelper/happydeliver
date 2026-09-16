@@ -21,6 +21,9 @@
             minute: "2-digit",
         });
     }
+    function getTestId(test: TestSummary & { id?: string }, index: number): string {
+        return test.test_id || test.id || `test-${index}`;
+    }
 </script>
 
 <div class="table-responsive shadow-sm">
@@ -35,10 +38,10 @@
             </tr>
         </thead>
         <tbody>
-            {#each tests as test (test.test_id)}
+            {#each tests as test, i (getTestId(test, i))}
                 <tr
                     class="cursor-pointer"
-                    onclick={() => goto(resolve("/test/[test]", { test: test.test_id }))}
+                    onclick={() => goto(resolve("/test/[test]", { test: getTestId(test, i) }))}
                 >
                     <td class="ps-4">
                         <GradeDisplay grade={test.grade} size="small" />
