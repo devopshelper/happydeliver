@@ -1430,6 +1430,10 @@ components:
           example: "A"
         dns_results:
           $ref: '#/components/schemas/DNSResults'
+        is_disposable:
+          type: boolean
+          description: Whether the domain is a known disposable email provider
+          example: false
 
     BIMICheckRequest:
       type: object

@@ -1,11 +1,9 @@
 <script lang="ts">
     import { page } from "$app/state";
-    import { resolve } from "$app/paths";
     import { onDestroy } from "svelte";
 
     import { getReport, getTest, reanalyzeReport } from "$lib/api";
     import type { BlacklistCheck, Report, Test } from "$lib/api/types.gen";
-    import { isUploadedMessage } from "$lib/authentication";
     import {
         AuthenticationCard,
         BlacklistCard,
@@ -33,12 +31,10 @@
     let errorStatus = $state<number>(500);
     let reanalyzing = $state(false);
     let pollInterval: ReturnType<typeof setInterval> | null = null;
-    let reportRetryTimeout: ReturnType<typeof setTimeout> | null = null;
     let nextfetch = $state(23);
     let nbfetch = $state(0);
     let menuOpen = $state(false);
     let fetching = $state(false);
-    let reportRateLimited = $state(false);
 
     // Helper function to handle API errors
     function handleApiError(apiError: unknown, defaultMessage: string) {
@@ -70,39 +66,6 @@
         }
     }
 
-    function isRateLimited(apiError: unknown): boolean {
-        return (
-            !!apiError &&
-            typeof apiError === "object" &&
-            "error" in apiError &&
-            apiError.error === "rate_limit_exceeded"
-        );
-    }
-
-    async function fetchReport() {
-        if (!testId) return;
-
-        try {
-            const reportResponse = await getReport({ path: { id: testId } });
-            if (reportResponse.data) {
-                reportRateLimited = false;
-                report = reportResponse.data;
-                stopPolling();
-            } else if (reportResponse.error) {
-                if (isRateLimited(reportResponse.error)) {
-                    reportRateLimited = true;
-                    reportRetryTimeout = setTimeout(fetchReport, 2000);
-                } else {
-                    handleApiError(reportResponse.error, "Failed to fetch report");
-                    stopPolling();
-                }
-            }
-        } catch (err) {
-            handleApiError(err, "Failed to fetch report");
-            stopPolling();
-        }
-    }
-
     async function fetchTest() {
         if (!testId) return;
 
@@ -123,8 +86,12 @@
             if (testResponse.data) {
                 test = testResponse.data;
 
-                if (test.status === "analyzed" && !reportRetryTimeout) {
-                    await fetchReport();
+                if (test.status === "analyzed") {
+                    const reportResponse = await getReport({ path: { id: testId } });
+                    if (reportResponse.data) {
+                        report = reportResponse.data;
+                        stopPolling();
+                    }
                 }
             } else if (testResponse.error) {
                 handleApiError(testResponse.error, "Failed to fetch test");
@@ -168,10 +135,6 @@
         if (pollInterval) {
             clearInterval(pollInterval);
             pollInterval = null;
-        }
-        if (reportRetryTimeout) {
-            clearTimeout(reportRetryTimeout);
-            reportRetryTimeout = null;
         }
     }
 
@@ -263,17 +226,6 @@
             {fetching}
             on:force-inbox-check={() => fetchTest()}
         />
-    {:else if reportRateLimited}
-        <div class="text-center py-5">
-            <div
-                class="spinner-border text-primary"
-                role="status"
-                style="width: 3rem; height: 3rem;"
-            >
-                <span class="visually-hidden">Loading...</span>
-            </div>
-            <p class="mt-3 text-muted">Rate limited, retrying in a moment...</p>
-        </div>
     {:else if report}
         <!-- Results State -->
         <div class="fade-in">
@@ -306,17 +258,15 @@
                                             Reanalyze with Latest Version
                                         </button>
                                         <hr class="menu-divider" />
-                                        <!-- eslint-disable svelte/no-navigation-without-resolve -- API endpoint, not a SvelteKit route -->
                                         <a
                                             class="menu-item"
-                                            href={`/api/report/${testId}/raw.eml`}
+                                            href={`/api/report/${testId}/raw`}
                                             target="_blank"
                                             onclick={() => (menuOpen = false)}
                                         >
                                             <i class="bi bi-file-earmark-text me-2"></i>
                                             View Raw Email
                                         </a>
-                                        <!-- eslint-enable svelte/no-navigation-without-resolve -->
                                     </div>
                                 {/if}
                             </div>
@@ -326,10 +276,6 @@
                         grade={report.grade}
                         score={report.score}
                         summary={report.summary}
-                        authentication={report.authentication}
-                        source={report.source}
-                        spamFilters={report}
-                        blacklists={report}
                         {reanalyzing}
                     />
                 </div>
@@ -367,6 +313,7 @@
                             dnsResults={report.dns_results}
                             dnsGrade={report.summary?.dns_grade}
                             dnsScore={report.summary?.dns_score}
+                            receivedChain={report.header_analysis?.received_chain}
                         />
                     </div>
                 </div>
@@ -381,8 +328,6 @@
                             authenticationGrade={report.summary?.authentication_grade}
                             authenticationScore={report.summary?.authentication_score}
                             dnsResults={report.dns_results}
-                            source={report.source}
-                            authservId={report.authserv_id}
                         />
                     </div>
                 </div>
@@ -476,7 +421,7 @@
             <!-- Action Buttons -->
             <div class="row">
                 <div class="col-12 text-center">
-                    <a href={resolve("/test")} class="btn btn-primary btn-lg">
+                    <a href="/test/" class="btn btn-primary btn-lg">
                         <i class="bi bi-arrow-repeat me-2"></i>
                         Test Another Email
                     </a>

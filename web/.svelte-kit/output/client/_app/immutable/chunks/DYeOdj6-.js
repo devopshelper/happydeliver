@@ -1,0 +1,1 @@
+import{mt as e}from"./ByLW16V5.js";import"./D0QFaZ3b.js";var t={report_retention:0,survey_url:``,rbls:[]};function n(){if(typeof document<`u`){let e=document.getElementById(`app-config`);if(e)try{return JSON.parse(e.textContent||``)}catch(e){console.error(`Failed to parse app config:`,e)}}return null}var r=n()||t,i=e(r);export{i as t};

@@ -214,8 +214,8 @@
                                         <i class="bi bi-info-circle me-1"></i>
                                         <strong>Relaxed SPF alignment allowed</strong> — Your DMARC policy
                                         allows organizational domain matching. As long as both domains
-                                        share the same organizational domain (e.g., mail.example.com
-                                        and example.com), SPF alignment can pass.
+                                        share the same organizational domain (e.g., mail.example.com and
+                                        example.com), SPF alignment can pass.
                                     {/if}
                                 </div>
                             {/if}
@@ -331,8 +331,8 @@
                                                     <strong>Relaxed DKIM alignment allowed</strong> —
                                                     Your DMARC policy allows organizational domain matching.
                                                     As long as both domains share the same organizational
-                                                    domain (e.g., mail.example.com and example.com),
-                                                    DKIM alignment can pass.
+                                                    domain (e.g., mail.example.com and example.com), DKIM
+                                                    alignment can pass.
                                                 {/if}
                                             </div>
                                         {/if}

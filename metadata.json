@@ -1,0 +1,6 @@
+{
+  "name": "happyDeliver",
+  "description": "An open-source email deliverability testing platform that analyzes test emails and provides detailed deliverability reports with scoring.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

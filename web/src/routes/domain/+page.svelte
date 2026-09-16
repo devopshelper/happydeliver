@@ -1,6 +1,5 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
-    import { resolve } from "$app/paths";
 
     let domain = $state("");
     let error = $state<string | null>(null);
@@ -22,7 +21,7 @@
         }
 
         // Navigate to the domain test page
-        goto(resolve("/domain/[domain]", { domain: domain.trim() }));
+        goto(`/domain/${encodeURIComponent(domain.trim())}`);
     }
 
     function handleKeyPress(event: KeyboardEvent) {
@@ -145,7 +144,7 @@
                                     <i class="bi bi-arrow-right me-2"></i>Blacklist Checks
                                 </li>
                             </ul>
-                            <a href={resolve("/")} class="btn btn-sm btn-outline-primary">
+                            <a href="/" class="btn btn-sm btn-outline-primary">
                                 <i class="bi bi-envelope-plus me-1"></i>
                                 Send Test Email
                             </a>

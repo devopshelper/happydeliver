@@ -1,0 +1,20 @@
+{
+  "name": "happydeliver",
+  "version": "0.1.0",
+  "type": "module",
+  "workspaces": [
+    "web"
+  ],
+  "scripts": {
+    "postinstall": "node patch-fetch.js",
+    "dev": "node server.js",
+    "build": "npm run build:web",
+    "build:web": "cd web && npm run generate:api && npm run build",
+    "lint": "cd web && npm run lint",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "multer": "^2.4.0"
+  }
+}

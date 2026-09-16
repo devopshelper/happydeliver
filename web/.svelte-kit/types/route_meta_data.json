@@ -1,0 +1,16 @@
+{
+	"/": [],
+	"/bimi": [],
+	"/bimi/[domain]": [],
+	"/blacklist": [],
+	"/blacklist/[ip]": [],
+	"/domain": [],
+	"/domain/[domain]": [],
+	"/history": [],
+	"/test": [
+		"src/routes/test/+page.ts"
+	],
+	"/test/[test]": [
+		"src/routes/test/[test]/+page.ts"
+	]
+}

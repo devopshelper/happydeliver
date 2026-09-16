@@ -172,9 +172,9 @@
                         The results shown here were produced by this happyDeliver instance's own
                         receiving mail server.
                     {/if}
-                    happyDeliver does not recompute this
-                    part. Mechanisms marked <strong>Not tested</strong> were not evaluated by that infrastructure.
-                    Send a test message directly to happyDeliver to have them verified here.
+                    happyDeliver does not recompute this part. Mechanisms marked
+                    <strong>Not tested</strong> were not evaluated by that infrastructure. Send a test
+                    message directly to happyDeliver to have them verified here.
                 </p>
             </div>
         </div>

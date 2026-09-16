@@ -1,6 +1,5 @@
 <script lang="ts">
     import { page } from "$app/state";
-    import { resolve } from "$app/paths";
     import { onMount } from "svelte";
 
     import { testDomain } from "$lib/api";
@@ -60,7 +59,7 @@
                         <i class="bi bi-globe me-2"></i>
                         Domain Analysis
                     </h1>
-                    <a href={resolve("/domain")} class="btn btn-outline-secondary">
+                    <a href="/domain" class="btn btn-outline-secondary">
                         <i class="bi bi-arrow-left me-2"></i>
                         Test Another Domain
                     </a>
@@ -157,7 +156,7 @@
                                 deliverability testing including DKIM verification, content
                                 analysis, spam scoring, and blacklist checks:
                             </p>
-                            <a href={resolve("/")} class="btn btn-primary">
+                            <a href="/" class="btn btn-primary">
                                 <i class="bi bi-envelope-plus me-2"></i>
                                 Send a Test Email
                             </a>
